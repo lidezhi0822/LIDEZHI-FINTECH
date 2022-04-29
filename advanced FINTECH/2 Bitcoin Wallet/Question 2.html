@@ -1,0 +1,130 @@
+<html lang="en">
+  <head>
+    <title>1.2 Basic Web Coding</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script 
+        type="text/javascript" 
+        src="https://unpkg.com/bsv@1.5.3/bsv.min.js">
+    </script>
+    <script
+        type="text/javascript"
+        src="https://unpkg.com/bsv@1.5.3/bsv-mnemonic.min.js">
+    </script>
+	<script 
+  type="text/javascript" 
+  src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js">
+</script>
+     <script src="https://unpkg.com/axios/dist/axios.min.js">
+</script>
+</head>
+  <body>
+      
+      <div id="block0" style="background-color:#FFA250">
+           <h1>Mnemonic:</h1> 
+           <p id="phrase"> </p>
+      </div>
+      
+      <div id="block1">
+        <h1 id="head">First private Key:</h1> 
+        <p id="Text"></p>
+    </div>
+    <div id="block2">
+        <h1 id="head">Second private Key:</h1> 
+        <p id="Text2"></p>
+    </div>
+     <div id="block3">
+        <h1 id="head">Third private Key:</h1> 
+        <p id="Text3"></p>
+    </div>
+      
+      <div id="block4">
+           <h1>First Public Key:</h1> 
+           <p id="pubText"> </p>
+      </div>
+      <div id="block5">
+        <h1 id="head">Derived key:</h1> 
+        <p id="Text4"></p>
+    </div>
+    
+    <div id="block6">
+        <h1 id="head">Hardened key:</h1> 
+        <p id="Text5"></p>
+    </div>
+       <div id="block7">
+           <h1>Address:</h1> 
+           <p id="addressText"> </p>
+      </div>
+      
+      <div id="block8">
+           <h1>QR code:</h1>
+           <p id="qrcode"></p>
+      </div>
+      <div id="block9">
+        <h1>Balance in Satoshis:</h1>
+        <p id="balance"></p>
+    <script> 
+    var bsvMnemonic = window.bsvMnemonic;
+    var words = bsvMnemonic.fromRandom();
+    var hdPrivateKey = bsv.HDPrivateKey.fromSeed(words.toSeed())
+    var privateKeyStandard = hdPrivateKey.deriveChild("m/44'/0'/0'")
+    var privateKey = privateKeyStandard.privateKey;
+    
+    var privateKeyStandard2 = hdPrivateKey.deriveChild("m/45'/0'/0'")
+    var privateKey2 = privateKeyStandard2.privateKey;
+    
+    var privateKeyStandard3 = hdPrivateKey.deriveChild("m/46'/0'/0'")
+    var privateKey3 = privateKeyStandard3.privateKey;
+    
+    var publicKey = bsv.PublicKey.fromPrivateKey(privateKey)
+    var childPrivateKey =hdPrivateKey.deriveChild("m/44/0/0");
+    var hardenedPrivateKey = hdPrivateKey.deriveChild("m/44'/0'/0'");
+    var address = bsv.Address.fromPublicKey(publicKey);
+   
+
+    
+    var p = document.querySelector("#phrase");
+    p.innerHTML = words.toString();
+    
+    var p = document.querySelector("#Text");
+    p.innerHTML = privateKey.toString();
+    
+    var p = document.querySelector("#Text2");
+    p.innerHTML = privateKey2.toString();
+    
+    var p = document.querySelector("#Text3");
+    p.innerHTML = privateKey3.toString();
+    
+    var p = document.querySelector("#Text4");
+    p.innerHTML = childPrivateKey.toString();
+    
+    var q = document.querySelector("#Text5");
+    q.innerHTML = hardenedPrivateKey.toString();
+
+    var p = document.querySelector("#pubText");
+    p.innerHTML = publicKey.toString();
+
+    var y = document.querySelector("#addressText");
+    y.innerHTML = address.toString();
+    
+    var addressCode = 'bitcoinsv:' + address;
+    
+    new QRCode(document.getElementById("qrcode"), addressCode);
+    
+    var config = {
+    method: 'get',
+    url: "https://api.whatsonchain.com/v1/bsv/main/address/" +
+    address + "/balance", };
+    
+    axios(config)
+    .then((response) => {
+     let data = JSON.stringify(response.data);
+     let p = document.getElementById("balance");
+    p.innerHTML = data;
+   })
+     </script>
+  </body>
+</html>

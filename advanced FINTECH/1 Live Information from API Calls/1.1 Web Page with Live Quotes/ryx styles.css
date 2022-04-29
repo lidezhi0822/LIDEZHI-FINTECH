@@ -1,0 +1,20 @@
+html{
+    background-color: rgba(51, 192, 213, 0.882);
+}
+h1{
+    font-size: 40px;
+    text-align: center;
+    color: rgb(21, 100, 248);
+    text-shadow: black;
+}
+body{
+    width: 1000px;
+    background-color: rgb(217, 239, 137);
+    padding: 20px;
+    border: gray;
+}
+p{
+    font-size: large;
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 1;
+}
